@@ -6,61 +6,92 @@ import ic_search from '../../../assets/icons/search.svg';
 import ic_edit from '../../../assets/icons/edit.svg';
 import ic_delete from '../../../assets/icons/delete.svg';
 import '../../../App.css';
+import { CreateUnit, DeleteUnit, GetAllUnit } from "../../../api/unit/unitAction";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UnitModalComponent = ({ isOpen, onClose, children }) => {
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isOpen && !event.target.closest('.modal-content')) {
-        onClose();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [forceRender, setForceRender] = useState(false);
+  const [value, setValue] = useState({ unitname: "" });
+  const dispatch = useDispatch();
+  const unitData = useSelector(state => state.unit.unit);
+
+  const handleChange = (e) => {
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const deleteUnitFunc = (id) => {
+    setIsModalOpen(true);
+    setForceRender(prev => !prev);
+    Swal.fire({
+      title: 'ທ່ານຕ້ອງການລົບ?',
+      text: 'ທ່ານຕ້ອງການລົບບໍ່!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ລົບ ! ',
+      cancelButtonText: "ຍົກເລີກ",
+    }).then(async (result) => {
+      console.log(result);
+      if (result.isConfirmed) {
+        Swal.clickConfirm();
+        const messageReturn = await DeleteUnit(id);
+        if (messageReturn.success) {
+          toast.success(messageReturn.message);
+        } else {
+          toast.error(messageReturn.message);
+        }
       }
-    };
-    // Attach the event listener
-    document.addEventListener('mousedown', handleClickOutside);
-    // Cleanup the event listener
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, onClose]);
+      setIsModalOpen(false);
+      setForceRender(prev => !prev);
+    });
 
-  if (!isOpen) return null;
+  }
 
 
+  const createUnitFunc = async () => {
+    const messageReturn = await CreateUnit(value);
+    if (messageReturn.success) {
+      toast.success(messageReturn.message);
+    } else {
+      toast.error(messageReturn.message);
+    }
+    setForceRender(prev => !prev);
+  }
 
-  const fakeData = [
-    {
-      id: 1,
-      name: "ແພັກ 24",
-    },
-    {
-      id: 2,
-      name: "ແພັກ 12",
+  useEffect(() => {
+    // fetch data(unit)
+    dispatch(GetAllUnit());
+    if (isModalOpen == false) {
+      const handleClickOutside = (event) => {
+        if (isOpen && !event.target.closest('.modal-content')) {
+          onClose();
+        }
+      };
+      // Attach the event listener
+      document.addEventListener('mousedown', handleClickOutside);
+      // Cleanup the event listener
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
 
-    }, {
-      id: 3,
-      name: "ແພັກ 6",
-
-    }, {
-      id: 4,
-      name: "ແກັດ",
-
-    }, {
-      id: 5,
-      name: "ແກັດ",
-
-    }, {
-      id: 6,
-      name: "ແກັດລິດ",
-
-    },
-  ];
+    }
+  }, [isOpen, onClose, forceRender]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5); // Set number of items per page
-  const totalPages = Math.ceil(fakeData.length / itemsPerPage);
+  const totalPages = Math.ceil(unitData.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = fakeData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = unitData.slice(indexOfFirstItem, indexOfLastItem);
   // Handle next and previous page
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -75,6 +106,7 @@ const UnitModalComponent = ({ isOpen, onClose, children }) => {
 
   return (
     <div className="modal-overlay " >
+      <ToastContainer />
       <div className="modal-content">
         <div className="flex flex-col items-center justify-center">
           <div className="border-b border-lineColor w-full flex justify-center">
@@ -87,11 +119,12 @@ const UnitModalComponent = ({ isOpen, onClose, children }) => {
                 <div className="w-full border border-lineColor rounded-md my-2 flex justify-center items-center">
                   <input
                     className="w-full py-2 px-5 rounded text-center"
-                    id="name"
-                    name="name"
+                    name="unitname"
+                    autoComplete="off"
                     type="text"
                     required=""
                     placeholder="ຊື່ຫົວໜ່ວຍ"
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -101,7 +134,7 @@ const UnitModalComponent = ({ isOpen, onClose, children }) => {
                     <img src={ic_restart} alt="" className=" " />
                     <div className="text-white text-lg">restart</div>
                   </div>
-                  <div className="w-1/4 bg-greenBottle flex justify-between py-1 px-2 rounded-md">
+                  <div className="w-1/4 bg-greenBottle flex justify-between py-1 px-2 rounded-md" onClick={() => { createUnitFunc(); }}>
                     <img src={ic_save} alt="" className=" " />
                     <div className="text-white text-lg " >ບັນທຶກ</div>
                   </div>
@@ -128,22 +161,25 @@ const UnitModalComponent = ({ isOpen, onClose, children }) => {
                   <p className="text-base font-light w-1/6">ຊື່ຫົວໜ່ວຍ</p>
                   <p className="text-base font-light w-1/6">ການຈັດການ</p>
                 </div>
-                {currentItems.map((item) => (
-                <div className="w-full pt-3 pb-5 mt-3 mb-1 bg-white flex justify-between items-center px-5 border-b border-lineColor">
-                  <p className="text-base font-light w-1/6">{item.id}</p>
-                  <p className="text-base font-light w-1/6">{item.name}</p>
-                  <div className="flex justify-evenly w-1/6">
-                    <div className="flex  mx-1 items-center">
-                      <img src={ic_edit} alt="" className="w-4 h-4" />
-                      <p className="text-base font-light ml-1">Edit</p>
-                    </div>
-                    <div className="flex mx-1 items-center">
-                      <img src={ic_delete} alt="" className="w-4 h-4" />
-                      <p className="text-base font-light ml-1">ລົບ</p>
+                {currentItems.map((item, index) => (
+                  <div className="w-full pt-3 pb-5 mt-3 mb-1 bg-white flex justify-between items-center px-5 border-b border-lineColor" key={item.id}>
+                    <p className="text-base font-light w-1/6">{indexOfFirstItem + index + 1}</p>
+                    <p className="text-base font-light w-1/6">{item.unit}</p>
+                    <div className="flex justify-evenly w-1/6">
+                      <div className="flex  mx-1 items-center" onClick={() => { }}>
+                        <img src={ic_edit} alt="" className="w-4 h-4" />
+                        <p className="text-base font-light ml-1">Edit</p>
+                      </div>
+                      <div className="flex mx-1 items-center" onClick={() => {
+                        deleteUnitFunc(item.id);
+
+                      }}>
+                        <img src={ic_delete} alt="" className="w-4 h-4" />
+                        <p className="text-base font-light ml-1">ລົບ</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
               </div>
               <div className="w-full flex justify-between px-5">
                 <div className="w-1/12 border border-lineColor bg-white rounded-md items-center justify-center flex" onClick={prevPage}>

@@ -13,27 +13,34 @@ import AddConsumerManagementModalComponent from './addConsumerManagementModal.js
 
 // Product Management Modal Component
 const CustomerManagementModalComponent = ({ isOpen, onClose }) => {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [forceRender, setForceRender] = useState(false);
 
     const closeModal = () => {
+        setForceRender(prev => !prev); // Toggle forceRender
+        console.log(isModalOpen);
         setIsModalOpen(false);
     };
     useEffect(() => {
+        console.log("isModalOpen is now:", isModalOpen);
         if (isModalOpen == false) {
             const handleClickOutside = (event) => {
                 if (isOpen && !event.target.closest('.modal-content')) {
-                    console.log("modal-content");
+                    console.log("onClose customer");
                     onClose();
                 }
             };
+
             // Attach the event listener
             document.addEventListener('mousedown', handleClickOutside);
             // Cleanup the event listener
             return () => {
                 document.removeEventListener('mousedown', handleClickOutside);
             };
+
         }
-    }, [isOpen, onClose]);
+    }, [isOpen, onClose, forceRender]);
     //dropdow
     const [selectedUnit, setSelectedUnit] = useState("ສາຍນ້ຳ");
     const unitData = ["saab", "option2", "option3"];
@@ -177,7 +184,7 @@ const CustomerManagementModalComponent = ({ isOpen, onClose }) => {
                                 <p className="text-base font-light w-1/6">ທີ່ຢູ່</p>
                                 <p className="text-base font-light w-1/6">ສາຍນ້ຳ</p>
                                 <p className="text-base font-light w-1/6">ລະຫັດ</p>
-                                <p className="text-base font-light w-1/6">ຊື່ ແລະ ນາມສະກຸນ</p>
+                                <p className="text-base font-light w-1/5">ຊື່ ແລະ ນາມສະກຸນ</p>
                                 <p className="text-base font-light w-1/6">ຮ່ອມ</p>
                                 <p className="text-base font-light w-1/6">ເລກເຮືອນ</p>
                                 <p className="text-base font-light w-1/6">ບ້ານ</p>
@@ -191,7 +198,7 @@ const CustomerManagementModalComponent = ({ isOpen, onClose }) => {
                                 <p className="text-base font-light w-1/6"><img src={location} alt="" /></p>
                                 <p className="text-base font-light w-1/6">ວັນຈັນ</p>
                                 <p className="text-base font-light w-1/6">C00061</p>
-                                <p className="text-base font-light w-1/6">ແມ່ຍັນ</p>
+                                <p className="text-base font-light w-1/5">ແມ່ຍັນ</p>
                                 <p className="text-base font-light w-1/6">01</p>
                                 <p className="text-base font-light w-1/6">201</p>
                                 <p className="text-base font-light w-1/6">ລາດຄວາຍ</p>
@@ -202,8 +209,10 @@ const CustomerManagementModalComponent = ({ isOpen, onClose }) => {
                                     <img src={ic_delete} alt="" className="w-6 h-6" />
                                 </div>
                                 <div className="w-1/6 flex flex-col justify-center items-center " onClick={() => {
+                                    console.log(isModalOpen);
                                     setIsModalOpen(true);
-
+                                    setForceRender(prev => !prev); // Toggle forceRender
+                                    console.log(isModalOpen);
                                 }} >
                                     <div className="flex justify-center items-center bg-restartColor rounded-md py-1 px-2">
                                         <img src={ic_add} alt="h-[100%] " className="w-6 h-6 " />
@@ -216,8 +225,7 @@ const CustomerManagementModalComponent = ({ isOpen, onClose }) => {
                     </div>
                 </div>
             </div>
-            {isModalOpen === true && <AddConsumerManagementModalComponent isOpen={isModalOpen} onClose={() => {
-                setIsModalOpen(false);
+            {isModalOpen === true && <AddConsumerManagementModalComponent onClose={() => {
                 closeModal();
             }}
             />}

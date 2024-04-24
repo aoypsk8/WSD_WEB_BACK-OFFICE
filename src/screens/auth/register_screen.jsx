@@ -1,6 +1,7 @@
 // rafce
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../../api/authAction";
 
 const Register = () => {
   const [value, setValue] = useState({
@@ -18,8 +19,8 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
     // dispatch(
     //   registerUser(
     //     value.userName,
@@ -32,7 +33,7 @@ const Register = () => {
     //     navigate("/login");
     //   }
     // });
-  };
+  // };
   const [showPassword, setShowPassword] = useState(false); 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword); // Toggle password visibility state

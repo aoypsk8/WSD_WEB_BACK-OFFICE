@@ -83,7 +83,8 @@ function Aside({ onItemSelected }) {
             </div>
             {/* navigation */}
             <NavItem iconSrc={ic_home} iconCor={ic_home_color} text="ໜ້າຫຼັກ" onClick={() => { onItemSelected("home"); setSelectedItem("ໜ້າຫຼັກ"); }} />
-            <NavItem iconSrc={ic_listCard} iconCor={ic_listCard_color} text="ຈັດການຂໍ້ມູນພື້ນຖານ" onClick={() => { onItemSelected("manage"); setSelectedItem("ຈັດການຂໍ້ມູນພື້ນຖານ"); }} />
+            <NavItem iconSrc={ic_card} iconCor={ic_card_color} text="ຈັດການຂໍ້ມູນພື້ນຖານ" onClick={() => { onItemSelected("manage"); setSelectedItem("ຈັດການຂໍ້ມູນພື້ນຖານ"); }} />
+            <NavItem iconSrc={ic_listCard} iconCor={ic_listCard_color} text="ເບີກຈ່າຍນ້ຳ ແລະ ຊຳລະເງິນ" onClick={() => { onItemSelected("exportAndPay"); setSelectedItem("ເບີກຈ່າຍນ້ຳ ແລະ ຊຳລະເງິນ"); }} />
             <NavItem iconSrc={ic_bag} iconCor={ic_bag_color} text="ຂາຍໜ້າໂຮງງານ" onClick={() => { onItemSelected("front"); setSelectedItem("ຂາຍໜ້າໂຮງງານ"); }} />
             <NavItem iconSrc={ic_listCard} iconCor={ic_listCard_color} text="ບັນທຶກລາຍຈ່າຍ" onClick={() => { onItemSelected("save play"); setSelectedItem("ບັນທຶກລາຍຈ່າຍ"); }} />
             <NavItem iconSrc={ic_setting}  text="ຕັ້ງຄ່າລະບົບ" dropDown={true} isDropDown={isDropDown} toggleDropDown={toggleDropDown} />

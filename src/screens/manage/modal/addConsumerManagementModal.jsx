@@ -7,8 +7,6 @@ import '../../../App.css';
 const addConsumerManagementModalComponent = ({ isOpen, onClose }) => {
     const [selectedUnit, setSelectedUnit] = useState("ເລືອກ");
     const unitData = ["saab", "option2", "option3"];
-
-
     // Custom Dropdown Component
     const CustomDropdown = ({ options, selectedOption, onSelect }) => {
         const [isOpenDropDown, setIsOpenDropDown] = useState(false);
@@ -145,7 +143,7 @@ const addConsumerManagementModalComponent = ({ isOpen, onClose }) => {
                             />
                         </div>
                         <div className="w-full flex justify-end items-center mt-20">
-                            <div className="w-1/6 bg-white flex justify-center py-1 px-2 rounded-md shadow-xl hover:cursor-pointer" onClick={()=>onClose()}>
+                            <div className="w-1/6 bg-lineColor bg-opacity-50 flex justify-center py-1 px-2 rounded-md shadow-sm hover:cursor-pointer" onClick={()=>onClose()}>
                                 <div className="text-redBottle text-lg">ຍົກເລີກ</div>
                             </div>
                             <div className="w-5"></div>

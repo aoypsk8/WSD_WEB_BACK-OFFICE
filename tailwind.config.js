@@ -25,6 +25,8 @@ export default {
       greenBottle:"#49A84D",
       yellowBottle:"#F6BB1D",
       geryBottle:"#3F3F3F",
+      scueess:"#A8FFA6",
+      watting:"#91B6DB",
 
     },
   },

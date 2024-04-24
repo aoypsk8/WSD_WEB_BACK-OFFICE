@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Aside from "./component/aside.jsx";
 import HomeScreen from "./home/homeScreen.jsx";
 import ManageScreen from "./manage/manageScreen.jsx";
+import ExportAndPayScreen from "./exportAndPay/exportAndPay.jsx";
 
 function Dashboard() {
   const [selectedItem, setSelectedItem] = useState('home');
@@ -16,6 +17,8 @@ function Dashboard() {
         return <HomeScreen />;
       case 'manage':
         return <ManageScreen />;
+      case 'exportAndPay':
+        return <ExportAndPayScreen />;
       default:
         return null;
     }
